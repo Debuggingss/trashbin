@@ -32,6 +32,9 @@
         <div>
             <i class="fas fa-key"></i> Password <input id="password" type="text">
         </div>
+        <div class="topgap">
+            <span id="chars">Characters: 0/<%= max_length %></span>
+        </div>
     </div>
 
     <div class="container content">
@@ -39,6 +42,17 @@
     </div>
 
     <script>
+        $("#content").bind("input propertychange", () => {
+            let content = $("#content").val();
+            $("#chars").html(`Characters: ${content.length}/<%= max_length %>`);
+
+            if (content.length > <%= max_length %>) {
+                $("#chars").addClass("red");
+            } else {
+                $("#chars").removeClass("red");
+            }
+        });
+
         $("#save").click(e => {
             e.preventDefault();
             $.post("/save", {
@@ -57,13 +71,16 @@
                         alert("Please enter a valid filename.");
                         break;
                     case 403:
-                        alert("Please enter the password.");
+                        alert("Wrong password.");
                         break;
                     case 409:
                         alert("A document with that name already exists.");
                         break;
                     case 406:
                         alert("Master password is required for custom file names.");
+                        break;
+                    case 413:
+                        alert("Content is too large.");
                         break;
                     default:
                         alert("An unknown error occurred.");

@@ -10,6 +10,8 @@ const {
 
 const {
     getRandomPhoneticKey,
+    loadLimiter,
+    createLimiter,
 } = require("./utils/utils.js");
 
 const config = require("./config.json");
@@ -28,19 +30,25 @@ const app = express();
 const server = http.createServer(app);
 
 app.set("view engine", "ejs");
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use("/public", express.static(path.join(__dirname, "./public")));
 
 app.get("/", (req, res) => {
-    res.render("create");
+    res.render("create", {
+        max_length: config.paste.max_length,
+    });
 });
 
-app.post("/save", async (req, res) => {
+app.post("/save", createLimiter, async (req, res) => {
     const { filename, content, dpassword, password } = req.body;
 
     if (!content) {
         return res.sendStatus(400);
+    }
+
+    if (content.length > config.paste.max_length) {
+        return res.sendStatus(413);
     }
 
     if (password !== config.password && password !== config.master_password) {
@@ -72,11 +80,11 @@ app.post("/save", async (req, res) => {
     });
 });
 
-app.get("/:filename", async (req, res) => {
+app.get("/:filename", loadLimiter, async (req, res) => {
     sendDocument(req, res, false);
 });
 
-app.get("/raw/:filename", async (req, res) => {
+app.get("/raw/:filename", loadLimiter, async (req, res) => {
     sendDocument(req, res, true);
 });
 

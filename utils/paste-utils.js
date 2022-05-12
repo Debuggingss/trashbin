@@ -20,7 +20,7 @@ const createPaste = async (paste) => {
         uploaded_at: paste.uploaded_at,
     }));
 
-    console.log(`Created paste ${paste.filename}.`);
+    console.log(`Created paste ${paste.filename}. Length: ${paste.content.length}`);
 };
 
 const getPaste = async (filename) => {

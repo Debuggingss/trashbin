@@ -62,6 +62,24 @@ pre, code {
     cursor: pointer;
 }
 
+.right {
+    position: absolute;
+    right: 0px;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 0px;
+}
+
+.red {
+    color: #ff0000;
+}
+
+.topgap {
+    margin-top: 20px;
+}
+
 input, input:focus {
     font-family: "Consolas", monospace;
     font-size: 15px;

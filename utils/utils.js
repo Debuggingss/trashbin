@@ -1,3 +1,6 @@
+const rateLimit = require("express-rate-limit");
+const config = require("../config.json");
+
 const vowels = "aeiou";
 const consonants = "bcdfghjklmnpqrstvwxyz";
 
@@ -19,8 +22,30 @@ const getRandomPhoneticKey = (length) => {
     return key;
 };
 
+const loadLimiter = rateLimit({
+	windowMs: config.ratelimit.load.time_window,
+	max: config.ratelimit.load.max_requests,
+	standardHeaders: true,
+	legacyHeaders: false,
+    keyGenerator: (req) => {
+        return req.headers["cf-connecting-ip"] || req.ip;
+    }
+});
+
+const createLimiter = rateLimit({
+	windowMs: config.ratelimit.create.time_window,
+	max: config.ratelimit.create.max_requests,
+	standardHeaders: true,
+	legacyHeaders: false,
+    keyGenerator: (req) => {
+        return req.headers["cf-connecting-ip"] || req.ip;
+    }
+});
+
 module.exports = {
     getRandomInt,
     getRandom,
     getRandomPhoneticKey,
+    loadLimiter,
+    createLimiter,
 };
