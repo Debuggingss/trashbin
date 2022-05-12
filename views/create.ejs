@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/public/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/tokyo-night-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <title>trashbin</title>
+</head>
+
+<body>
+    <div class="container notouch">
+        <div class="btn">
+            <i class="fas fa-file-arrow-up"></i><a id="save"> Save Document</a>
+        </div>
+        <div>
+            <i class="fas fa-file-code"></i> File Name <input id="filename" type="text">
+        </div>
+        <div>
+            <i class="fas fa-key"></i> Document Password <input id="dpassword" type="text">
+        </div>
+        <div>
+            <i class="fas fa-key"></i> Password <input id="password" type="text">
+        </div>
+    </div>
+
+    <div class="container content">
+        <textarea class="scroll" id="content" spellcheck="false" placeholder="Enter Code..."></textarea>
+    </div>
+
+    <script>
+        $("#save").click(e => {
+            e.preventDefault();
+            $.post("/save", {
+                filename: $("#filename").val(),
+                content: $("#content").val(),
+                dpassword: $("#dpassword").val(),
+                password: $("#password").val(),
+            }, (data) => {
+                window.location.href = `/${data.filename}`;
+            })
+            .fail((jqXHR, textStatus, errorThrow) => {
+                const status = jqXHR.status;
+
+                switch (status) {
+                    case 400:
+                        alert("Please enter a valid filename.");
+                        break;
+                    case 403:
+                        alert("Please enter the password.");
+                        break;
+                    case 409:
+                        alert("A document with that name already exists.");
+                        break;
+                    case 406:
+                        alert("Master password is required for custom file names.");
+                        break;
+                    default:
+                        alert("An unknown error occurred.");
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>

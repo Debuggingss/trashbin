@@ -1,0 +1,9 @@
+{
+    "port": 8484,
+    "password": "2022",
+    "master_password": "1984",
+    "paste": {
+        "max_length": "100000",
+        "filename_length": "10"
+    }
+}

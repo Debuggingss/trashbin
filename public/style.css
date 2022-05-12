@@ -1,0 +1,141 @@
+body, html {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    background-color: #1A1B26;
+    font-family: "Consolas", monospace;
+    font-size: 15px;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+body > div:not(:first-child) {
+    margin-top: 0px;
+}
+
+pre, code {
+    padding: 0px !important;
+    margin: 0px !important;
+}
+
+.notouch {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.scroll {
+    overflow: scroll !important;
+}
+
+.content {
+    height: 100%;
+}
+
+.container {
+    border: 1px solid #252636;
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.container > div {
+    color: #eee;
+}
+
+.container > div:not(:first-child) {
+    padding-top: 5px;
+}
+
+.container > .btn:hover {
+    color: #aff;
+    cursor: pointer;
+}
+
+input, input:focus {
+    font-family: "Consolas", monospace;
+    font-size: 15px;
+    resize: none;
+    height: 100%;
+    width: 120px;
+    background-color: #1A1B26;
+    color: #aff;
+    border: 1px solid #252636;
+    background: transparent;
+    -webkit-appearance: none;
+    -moz-apperarance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    outline: none;
+    padding: 0px;
+    resize: none;
+    overflow: hidden;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+}
+
+textarea, textarea:focus {
+    font-family: "Consolas", monospace;
+    font-size: 15px;
+    height: 100%;
+    width: 100%;
+    resize: none;
+    background-color: #1A1B26;
+    color: #eee;
+    border: none;
+    background: transparent;
+    -webkit-appearance: none;
+    -moz-apperarance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+    outline: none;
+    padding: 0px;
+    resize: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    -ms-box-shadow: none;
+    -o-box-shadow: none;
+    box-shadow: none;
+    white-space: pre;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1A1B26;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+::-webkit-scrollbar-corner {
+    background: #00000000;
+}
+
+.hljs-ln-numbers {
+    text-align: right;
+    padding-right: 20px !important;
+}

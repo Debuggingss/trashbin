@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="/public/favicon.png" type="image/png">
+
+    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/tokyo-night-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+    <title><%= filename %> | trashbin</title>
+</head>
+
+<body>
+    <div class="container notouch">
+        <div class="btn">
+            <i class="fas fa-file"></i><a id="new"> New</a>
+        </div>
+        <div class="btn">
+            <i class="fas fa-file-lines"></i><a id="raw"> View Raw</a>
+        </div>
+    </div>
+
+    <div class="container content scroll">
+        <pre><code><%= content.replace(/\t/g, "    ") %></code></pre>
+    </div>
+
+    <script>
+        $("#new").click(e => {
+            e.preventDefault();
+            window.location.href = "/";
+        });
+
+        $("#raw").click(e => {
+            e.preventDefault();
+            window.location.href = "/raw/<%= filename %>";
+        });
+    </script>
+
+    <script>
+        hljs.highlightAll();
+        hljs.initLineNumbersOnLoad();
+    </script>
+</body>
+
+</html>
