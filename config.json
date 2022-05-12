@@ -9,11 +9,11 @@
     "ratelimit": {
         "load": {
             "max_requests": "5",
-            "time_window": "1"
+            "time_window": "1000"
         },
         "create": {
             "max_requests": "1",
-            "time_window": "3"
+            "time_window": "3000"
         }
     }
 }
