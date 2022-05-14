@@ -6,11 +6,11 @@ const consonants = "bcdfghjklmnpqrstvwxyz";
 
 const getRandomInt = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+};
 
 const getRandom = (array) => {
     return array[getRandomInt(0, array.length - 1)];
-}
+};
 
 const getRandomPhoneticKey = (length) => {
     let key = "";
@@ -23,23 +23,23 @@ const getRandomPhoneticKey = (length) => {
 };
 
 const loadLimiter = rateLimit({
-	windowMs: config.ratelimit.load.time_window,
-	max: config.ratelimit.load.max_requests,
-	standardHeaders: true,
-	legacyHeaders: false,
+    windowMs: config.ratelimit.load.time_window,
+    max: config.ratelimit.load.max_requests,
+    standardHeaders: true,
+    legacyHeaders: false,
     keyGenerator: (req) => {
         return req.headers["cf-connecting-ip"] || req.ip;
-    }
+    },
 });
 
 const createLimiter = rateLimit({
-	windowMs: config.ratelimit.create.time_window,
-	max: config.ratelimit.create.max_requests,
-	standardHeaders: true,
-	legacyHeaders: false,
+    windowMs: config.ratelimit.create.time_window,
+    max: config.ratelimit.create.max_requests,
+    standardHeaders: true,
+    legacyHeaders: false,
     keyGenerator: (req) => {
         return req.headers["cf-connecting-ip"] || req.ip;
-    }
+    },
 });
 
 module.exports = {

@@ -2,17 +2,8 @@ const http = require("http");
 const path = require("path");
 const express = require("express");
 
-const {
-    createPaste,
-    getPaste,
-    Paste,
-} = require("./utils/paste-utils.js");
-
-const {
-    getRandomPhoneticKey,
-    loadLimiter,
-    createLimiter,
-} = require("./utils/utils.js");
+const { getRandomPhoneticKey, loadLimiter, createLimiter } = require("./utils/utils.js");
+const { createPaste, getPaste, Paste } = require("./utils/paste-utils.js");
 
 const config = require("./config.json");
 
@@ -25,6 +16,8 @@ if (config.master_password === "") {
     console.error("Master password must be not empty or 'null'.");
     process.exit(1);
 }
+
+const filenameRegex = new RegExp(config.paste.filename_regex);
 
 const app = express();
 const server = http.createServer(app);
@@ -44,38 +37,60 @@ app.post("/save", createLimiter, async (req, res) => {
     const { filename, content, dpassword, password } = req.body;
 
     if (!content) {
-        return res.sendStatus(400);
+        res.status(400).json({
+            error: "No content provided.",
+        });
+        return;
     }
 
     if (content.length > config.paste.max_length) {
-        return res.sendStatus(413);
+        res.status(413).json({
+            error: "Content is too long.",
+        });
+        return;
     }
 
     if (password !== config.password && password !== config.master_password) {
-        return res.sendStatus(403);
-    }
-
-    const existing = await getPaste(filename);
-
-    if (existing) {
-        return res.sendStatus(409);
+        res.status(403).json({
+            error: "Invalid password.",
+        });
+        return;
     }
 
     let pastename = getRandomPhoneticKey(config.paste.filename_length);
-    
+
     if (filename && filename !== "") {
         if (config.master_password && password !== config.master_password) {
-            return res.sendStatus(406);
+            res.status(400).json({
+                error: "Master password is required for custom filenames.",
+            });
+            return;
+        }
+
+        if (!filenameRegex.test(filename)) {
+            res.status(400).json({
+                error: `Invalid filename. Filename must match the regular expression:\n${config.paste.filename_regex}`,
+            });
+            return;
         }
 
         pastename = filename;
     }
 
-    const paste = new Paste(pastename, content, dpassword)
+    const existing = await getPaste(pastename);
+
+    if (existing) {
+        res.status(409).json({
+            error: "Paste with that name already exists.",
+        });
+        return;
+    }
+
+    const paste = new Paste(pastename, content, dpassword);
 
     await createPaste(paste);
 
-    return res.status(201).json({
+    res.status(201).json({
         filename: paste.filename,
     });
 });
@@ -92,9 +107,16 @@ const sendDocument = async (req, res, raw) => {
     const { filename } = req.params;
     const { password } = req.query;
 
+    let syntax = "";
+    let name = filename;
+
+    if (filename.includes(".")) {
+        [name, syntax] = filename.split(".");
+    }
+
     console.log(`Requested paste ${filename}.`);
 
-    const paste = await getPaste(filename);
+    const paste = await getPaste(name);
 
     if (!paste) {
         res.redirect("/");
@@ -102,15 +124,16 @@ const sendDocument = async (req, res, raw) => {
     }
 
     if (paste.password && paste.password !== password) {
-        return res.render("password", {
+        res.render("password", {
             filename: paste.filename,
             raw: raw,
         });
+        return;
     }
 
     if (raw) {
         res.set({
-            "Content-Type": "text/plain"
+            "Content-Type": "text/plain",
         });
 
         res.send(paste.content);
@@ -118,9 +141,10 @@ const sendDocument = async (req, res, raw) => {
         res.render("view", {
             filename: paste.filename,
             content: paste.content,
+            syntax: syntax,
         });
     }
-}
+};
 
 server.listen(config.port, () => {
     console.log(`Listening on port ${config.port}.`);

@@ -13,12 +13,15 @@ class Paste {
 }
 
 const createPaste = async (paste) => {
-    await client.set(paste.filename, JSON.stringify({
-        filename: paste.filename,
-        content: Buffer.from(paste.content).toString("base64"),
-        password: paste.password,
-        uploaded_at: paste.uploaded_at,
-    }));
+    await client.set(
+        paste.filename,
+        JSON.stringify({
+            filename: paste.filename,
+            content: Buffer.from(paste.content).toString("base64"),
+            password: paste.password,
+            uploaded_at: paste.uploaded_at,
+        })
+    );
 
     console.log(`Created paste ${paste.filename}. Length: ${paste.content.length}`);
 };

@@ -64,28 +64,7 @@
                 window.location.href = `/${data.filename}`;
             })
             .fail((jqXHR, textStatus, errorThrow) => {
-                const status = jqXHR.status;
-
-                switch (status) {
-                    case 400:
-                        alert("Please enter a valid filename.");
-                        break;
-                    case 403:
-                        alert("Wrong password.");
-                        break;
-                    case 409:
-                        alert("A document with that name already exists.");
-                        break;
-                    case 406:
-                        alert("Master password is required for custom file names.");
-                        break;
-                    case 413:
-                        alert("Content is too large.");
-                        break;
-                    default:
-                        alert("An unknown error occurred.");
-                        break;
-                }
+                alert(jqXHR.responseJSON.error);
             });
         });
     </script>

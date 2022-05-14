@@ -4,7 +4,8 @@
     "master_password": "1984",
     "paste": {
         "max_length": "100000",
-        "filename_length": "10"
+        "filename_length": "10",
+        "filename_regex": "^[\\w-]{3,20}$"
     },
     "ratelimit": {
         "load": {
